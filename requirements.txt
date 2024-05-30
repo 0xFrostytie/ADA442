@@ -4,6 +4,4 @@ numpy
 seaborn
 scikit-learn
 streamlit-aggrid
-SMOTE
-smote
 imbalanced-learn
