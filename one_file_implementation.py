@@ -5,22 +5,30 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 from imblearn.over_sampling import SMOTE
-pd.set_option('display.max_columns', None)
-bank_data = pd.read_csv("./bank-additional-full.csv", sep=';')
+import os
 
-print(bank_data.head())
+# Print current working directory for debugging
+st.text(f"Current working directory: {os.getcwd()}")
+
+# Load the dataset with error handling
+try:
+    bank_data = pd.read_csv("./bank-additional-full.csv", sep=';')
+except FileNotFoundError:
+    st.error("The dataset file 'bank-additional-full.csv' was not found. Please check the file path.")
+    st.stop()
+
+pd.set_option('display.max_columns', None)
+st.write("Sample data:", bank_data.head())
 
 org_X = bank_data.drop("y", axis=1)
 y = bank_data["y"].map({'no': 0, 'yes': 1})
 
 X = pd.get_dummies(org_X)
 
-print(X.shape)
-print(X.columns)
-
+st.write("Data shape:", X.shape)
+st.write("Data columns:", X.columns)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
 
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
@@ -34,13 +42,13 @@ logreg_classifier = LogisticRegression()
 logreg_classifier.fit(X_resampled, y_resampled)
 logreg_preds = logreg_classifier.predict(X_test_scaled)
 indices = [i for i, x in enumerate(logreg_preds) if x == 1][:10]
-print(X_test.iloc[indices])
+st.write("Indices of positive predictions:", indices)
+st.write("Sample of positive predictions data:", X_test.iloc[indices])
 
 logreg_accuracy = accuracy_score(y_test, logreg_preds)
-print("Logistic Regression Accuracy:", logreg_accuracy)
+st.write("Logistic Regression Accuracy:", logreg_accuracy)
 logreg_report = classification_report(y_test, logreg_preds)
-print("Logistic Regression Classification Report:")
-print(logreg_report)
+st.write("Logistic Regression Classification Report:", logreg_report)
 
 st.title('📃Deposit Prediction Web App')
 
@@ -67,7 +75,6 @@ cons_price_idx = st.number_input('Please enter consumer price index')
 cons_conf_idx = st.number_input('Please enter consumer confidence index')
 euribor3m = st.number_input('Please enter euribor 3 month rate')
 nr_employed = st.number_input('Please enter number of employees')
-
 
 if st.button('Press me'):
 
@@ -100,7 +107,6 @@ if st.button('Press me'):
 
     X_scaled = scaler.transform(X)
     prediction = logreg_classifier.predict(X_scaled)
-
 
     if prediction[0] == 0:
         st.error(f'No! Client is NOT subscribed to a term deposit.', icon="🚨")
