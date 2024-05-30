@@ -7,6 +7,9 @@ from sklearn.metrics import accuracy_score, classification_report
 from imblearn.over_sampling import SMOTE
 import os
 
+# Print current working directory for debugging
+st.text(f"Current working directory: {os.getcwd()}")
+
 # Load the dataset with error handling
 try:
     bank_data = pd.read_csv("./bank-additional-full.csv", sep=';')
@@ -15,11 +18,15 @@ except FileNotFoundError:
     st.stop()
 
 pd.set_option('display.max_columns', None)
+st.write("Sample data:", bank_data.head())
 
 org_X = bank_data.drop("y", axis=1)
 y = bank_data["y"].map({'no': 0, 'yes': 1})
 
 X = pd.get_dummies(org_X)
+
+st.write("Data shape:", X.shape)
+st.write("Data columns:", X.columns)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -35,9 +42,13 @@ logreg_classifier = LogisticRegression()
 logreg_classifier.fit(X_resampled, y_resampled)
 logreg_preds = logreg_classifier.predict(X_test_scaled)
 indices = [i for i, x in enumerate(logreg_preds) if x == 1][:10]
+st.write("Indices of positive predictions:", indices)
+st.write("Sample of positive predictions data:", X_test.iloc[indices])
 
 logreg_accuracy = accuracy_score(y_test, logreg_preds)
+st.write("Logistic Regression Accuracy:", logreg_accuracy)
 logreg_report = classification_report(y_test, logreg_preds)
+st.write("Logistic Regression Classification Report:", logreg_report)
 
 st.title('📃Deposit Prediction Web App')
 
@@ -85,9 +96,9 @@ if st.button('Press me'):
         'poutcome': [poutcome],
         'emp.var.rate': [emp_var_rate],
         'cons.price.idx': [cons_price_idx],
-        'cons.conf.idx': [cons_conf.idx],
+        'cons.conf.idx': [cons_conf_idx],
         'euribor3m': [euribor3m],
-        'nr.employed': [nr.employed]
+        'nr.employed': [nr_employed]
     })
 
     X = pd.concat([input_data, org_X], ignore_index=True)
