@@ -105,6 +105,6 @@ if st.button('Press me'):
     prediction = logreg_classifier.predict(X_scaled)
 
     if prediction[0] == 0:
-        st.error(f'No! Client is NOT subscribed to a term deposit.', icon="🚨")
+        st.error(f'Client has noot been subscribed to a term deposit.', icon="😢")
     else:
-        st.success(f'YES! Client subscribed to a term deposit.', icon="💸")
+        st.success(f'Client is subscribed to a term deposit.', icon="✅")
