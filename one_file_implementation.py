@@ -46,30 +46,52 @@ logreg_report = classification_report(y_test, logreg_preds)
 with st.sidebar:
     theme = option_menu("Choose Theme", ["Light", "Dark"], icons=["sun", "moon"], default_index=0)
 
+# Define custom CSS for both themes
+dark_theme = """
+<style>
+body {
+    color: #fff !important;
+    background-color: #0e1117 !important;
+}
+.sidebar .sidebar-content {
+    background-color: #1c1e24 !important;
+    color: #fff !important;
+}
+.css-17eq0hr a, .css-17eq0hr a:hover {
+    color: #fff !important;
+}
+.stButton button {
+    background-color: #30475e !important;
+    color: #fff !important;
+}
+</style>
+"""
+
+light_theme = """
+<style>
+body {
+    color: #000 !important;
+    background-color: #f5deb3 !important; /* wheat color */
+}
+.sidebar .sidebar-content {
+    background-color: #f0e6d6 !important;
+    color: #000 !important;
+}
+.css-17eq0hr a, .css-17eq0hr a:hover {
+    color: #000 !important;
+}
+.stButton button {
+    background-color: #8ab6d6 !important;
+    color: #000 !important;
+}
+</style>
+"""
+
+# Apply the selected theme
 if theme == "Dark":
-    st.markdown(
-        """
-        <style>
-        body {
-            color: #fff !important;
-            background-color: #0e1117 !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown(dark_theme, unsafe_allow_html=True)
 else:
-    st.markdown(
-        """
-        <style>
-        body {
-            color: #000 !important;
-            background-color: #f5deb3 !important; /* wheat color */
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown(light_theme, unsafe_allow_html=True)
 
 st.title('📃Deposit Prediction Web App')
 
