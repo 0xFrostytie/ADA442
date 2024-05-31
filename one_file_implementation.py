@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+from streamlit_option_menu import option_menu
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -23,8 +24,6 @@ y = bank_data["y"].map({'no': 0, 'yes': 1})
 
 X = pd.get_dummies(org_X)
 
-
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 scaler = StandardScaler()
@@ -40,11 +39,25 @@ logreg_classifier.fit(X_resampled, y_resampled)
 logreg_preds = logreg_classifier.predict(X_test_scaled)
 indices = [i for i, x in enumerate(logreg_preds) if x == 1][:10]
 
-
 logreg_accuracy = accuracy_score(y_test, logreg_preds)
-
 logreg_report = classification_report(y_test, logreg_preds)
 
+# Sidebar for theme selection
+with st.sidebar:
+    theme = option_menu("Choose Theme", ["Light", "Dark"], icons=["sun", "moon"], default_index=0)
+
+if theme == "Dark":
+    st.markdown(
+        """
+        <style>
+        body {
+            color: #fff;
+            background-color: #0e1117;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.title('📃Deposit Prediction Web App')
 
@@ -74,37 +87,38 @@ nr_employed = st.number_input('Please enter number of employees')
 
 if st.button('Press me'):
 
-    input_data = pd.DataFrame({
-        'age': [age],
-        'job': [job],
-        'marital': [marital],
-        'education': [education],
-        'default': [default],
-        'housing': [housing],
-        'loan': [loan],
-        'contact': [contact],
-        'month': [month],
-        'day_of_week': [day_of_week],
-        'duration': [duration],
-        'campaign': [campaign],
-        'pdays': [pdays],
-        'previous': [previous],
-        'poutcome': [poutcome],
-        'emp.var.rate': [emp_var_rate],
-        'cons.price.idx': [cons_price_idx],
-        'cons.conf.idx': [cons_conf_idx],
-        'euribor3m': [euribor3m],
-        'nr.employed': [nr_employed]
-    })
+    with st.spinner('Processing...'):
+        input_data = pd.DataFrame({
+            'age': [age],
+            'job': [job],
+            'marital': [marital],
+            'education': [education],
+            'default': [default],
+            'housing': [housing],
+            'loan': [loan],
+            'contact': [contact],
+            'month': [month],
+            'day_of_week': [day_of_week],
+            'duration': [duration],
+            'campaign': [campaign],
+            'pdays': [pdays],
+            'previous': [previous],
+            'poutcome': [poutcome],
+            'emp.var.rate': [emp_var_rate],
+            'cons.price.idx': [cons_price_idx],
+            'cons.conf.idx': [cons_conf_idx],
+            'euribor3m': [euribor3m],
+            'nr.employed': [nr_employed]
+        })
 
-    X = pd.concat([input_data, org_X], ignore_index=True)
-    X = pd.get_dummies(X)
-    X = X.iloc[[0]]
+        X = pd.concat([input_data, org_X], ignore_index=True)
+        X = pd.get_dummies(X)
+        X = X.iloc[[0]]
 
-    X_scaled = scaler.transform(X)
-    prediction = logreg_classifier.predict(X_scaled)
+        X_scaled = scaler.transform(X)
+        prediction = logreg_classifier.predict(X_scaled)
 
-    if prediction[0] == 0:
-        st.error(f'Client has noot been subscribed to a term deposit.', icon="😢")
-    else:
-        st.success(f'Client is subscribed to a term deposit.', icon="✅")
+        if prediction[0] == 0:
+            st.error(f'Client has noot been subscribed to a term deposit.', icon="😢")
+        else:
+            st.success(f'Client is subscribed to a term deposit.', icon="✅")
