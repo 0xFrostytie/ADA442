@@ -118,9 +118,9 @@ if st.button('Press me'):
             'poutcome': [poutcome],
             'emp.var.rate': [emp_var_rate],
             'cons.price.idx': [cons_price_idx],
-            'cons.conf.idx': [cons_conf.idx],
+            'cons.conf.idx': [cons_conf_idx],
             'euribor3m': [euribor3m],
-            'nr.employed': [nr.employed]
+            'nr.employed': [nr_employed]
         })
 
         X = pd.concat([input_data, org_X], ignore_index=True)
