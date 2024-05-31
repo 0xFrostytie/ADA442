@@ -58,6 +58,18 @@ if theme == "Dark":
         """,
         unsafe_allow_html=True
     )
+else:
+    st.markdown(
+        """
+        <style>
+        body {
+            color: #000;
+            background-color: #f5deb3; /* wheat color */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.title('📃Deposit Prediction Web App')
 
@@ -118,7 +130,8 @@ if st.button('Press me'):
         X_scaled = scaler.transform(X)
         prediction = logreg_classifier.predict(X_scaled)
 
-        if prediction[0] == 0:
-            st.error(f'Client has noot been subscribed to a term deposit.', icon="😢")
-        else:
-            st.success(f'Client is subscribed to a term deposit.', icon="✅")
+
+    if prediction[0] == 0:
+        st.error(f'Client has noot been subscribed to a term deposit.', icon="😢")
+    else:
+        st.success(f'Client is subscribed to a term deposit.', icon="✅")
