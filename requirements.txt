@@ -5,3 +5,4 @@ seaborn
 scikit-learn
 streamlit-aggrid
 imbalanced-learn
+streamlit-option-menu
