@@ -51,8 +51,8 @@ if theme == "Dark":
         """
         <style>
         body {
-            color: #fff;
-            background-color: #0e1117;
+            color: #fff !important;
+            background-color: #0e1117 !important;
         }
         </style>
         """,
@@ -63,8 +63,8 @@ else:
         """
         <style>
         body {
-            color: #000;
-            background-color: #f5deb3; /* wheat color */
+            color: #000 !important;
+            background-color: #f5deb3 !important; /* wheat color */
         }
         </style>
         """,
@@ -118,9 +118,9 @@ if st.button('Press me'):
             'poutcome': [poutcome],
             'emp.var.rate': [emp_var_rate],
             'cons.price.idx': [cons_price_idx],
-            'cons.conf.idx': [cons_conf_idx],
+            'cons.conf.idx': [cons_conf.idx],
             'euribor3m': [euribor3m],
-            'nr.employed': [nr_employed]
+            'nr.employed': [nr.employed]
         })
 
         X = pd.concat([input_data, org_X], ignore_index=True)
@@ -130,8 +130,7 @@ if st.button('Press me'):
         X_scaled = scaler.transform(X)
         prediction = logreg_classifier.predict(X_scaled)
 
-
-    if prediction[0] == 0:
-        st.error(f'Client has noot been subscribed to a term deposit.', icon="😢")
-    else:
-        st.success(f'Client is subscribed to a term deposit.', icon="✅")
+        if prediction[0] == 0:
+            st.error(f'Client has not been subscribed to a term deposit.', icon="😢")
+        else:
+            st.success(f'Client is subscribed to a term deposit.', icon="✅")
